@@ -1,11 +1,11 @@
-from flask import Flask, session # type: ignore
+from flask import session # type: ignore
 from flask_sqlalchemy import SQLAlchemy # type: ignore
 from flask_migrate import Migrate # type: ignore
 from flask_login import LoginManager, UserMixin # type: ignore
 from datetime import datetime
+from api.app import app
 import os
 
-app = Flask(__name__)
 app.config["SECRET_KEY"] = "school"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///school.db"
 #app.config["SECRET_KEY"] = os.environ['KEY']

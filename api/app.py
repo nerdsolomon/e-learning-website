@@ -1,5 +1,5 @@
-from flask import render_template, redirect, flash, request, session, url_for, send_from_directory # type: ignore
-from models import app, db, Staff, Student, Class, Subject,Session, Active, CBT, Grade, date, load_user
+from flask import Flask, render_template, redirect, flash, request, session, url_for, send_from_directory # type: ignore
+from models import db, Staff, Student, Class, Subject,Session, Active, CBT, Grade, date, load_user
 from functions import broadsheet, results, process_image
 from webforms import PostForm, StudentForm, CBTForm
 from flask_login import login_user, logout_user, current_user, login_required # type: ignore
@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename # type: ignore
 from werkzeug.wrappers import Response # type: ignore
 import os
 
+app = Flask(__name__)
 
 def store(var):
 	db.session.add(var)
