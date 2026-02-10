@@ -207,7 +207,7 @@ def staffs():
     staffs = Staff.query.order_by(-Staff.id)
     if request.method == "POST":
         if form.name.data == "add":
-            new_staff = Staff(name=form.string.data, email=form.email.data, role=request.form["role"], password=generate_password_hash(form.password.data))
+            new_staff = Staff(name=form.string.data, email=form.email.data, role=request.form["role"], password=generate_password_hash(0000))
             store(new_staff) 
         elif form.name.data == "edit":
             staff = Staff.query.filter_by(id=request.form["staff"]).first()
@@ -257,10 +257,10 @@ def students(active, id):
             name=form.name.data.capitalize(),
             other=form.other.data.capitalize(),
             surname=form.surname.data.capitalize(),
-            email=f"{form.name.data.lower()}{form.surname.data.lower()}@tsaps.edu",
+            email=f"{form.name.data.lower()}{form.surname.data.lower()}@nerd.edu",
             sex=form.sex.data,
             image=process_image(form.file.data) if form.file.data and process_image(form.file.data) else flash("Invalid image type. Allowed types: .png, .jpg, .jpeg"),
-            password=generate_password_hash(form.password.data),
+            password=generate_password_hash(0000),
             room_id=id,
             session_id=active
             )
@@ -272,7 +272,7 @@ def students(active, id):
             student.surname = form.surname.data
             student.sex = form.sex.data
             student.remark = form.remark.data
-            student.email = f"{form.name.data.lower()}{form.surname.data.lower()}@tsaps.edu"
+            student.email = f"{form.name.data.lower()}{form.surname.data.lower()}@nerd.edu"
             store(student)
     return render_template("students.html", students=students, form=form)
 
