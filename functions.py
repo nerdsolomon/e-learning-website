@@ -6,20 +6,25 @@ import os
 import uuid as uuid
 
 def broadsheet(active, id):
-    student_info = db.session.query(Student, Grade).join(Grade, Student.id == Grade.student_id).order_by(Student.id)
-    columns = ["Student", "SUBJECTS", "Exam", "Test", "Total"]
-    df = pd.DataFrame(columns=columns)
-    
-    for x, student in zip(range(student_info.count()), student_info):
-        df.loc[x, ["Student"]] = f"{student[0].name}  {student[0].other}  {student[0].surname}"
-        df.loc[x, ["SUBJECTS"]] = student[1].subject.title
-        df.loc[x, ["Exam"]] = student[1].exam
-        df.loc[x, ["Test"]] = student[1].test
-        df.loc[x, ["Total"]] = student[1].exam + student[1].test
-
-    new = df.pivot(index="Student", columns= "SUBJECTS", values=["Test", "Exam", "Total"])
+    student_info = db.session.query(Student, Grade).join(Grade, Student.id == Grade.student_id).order_by(Student.id).all()
+    if not student_info:
+        return pd.DataFrame()
+    df = pd.DataFrame(
+        [
+            {
+                "Student": f"{s.name} {s.other} {s.surname}",
+                "SUBJECTS": g.subject.title,
+                "Exam": g.exam,
+                "Test": g.test,
+                "Total": g.exam + g.test,
+            }
+            for s, g in student_info
+        ]
+    )
+    new = df.pivot( index="Student", columns="SUBJECTS", values=["Test", "Exam", "Total"] )
     new["Grand Total"] = df.groupby("Student")[["Test", "Exam"]].sum().sum(axis=1)
-    new["Average"] = new["Grand Total"] / df.groupby("Student").apply(lambda x:((x["Test"].notnull()) & (x["Test"].notnull())).sum())
+    valid_counts = df.assign(valid=df["Test"].notna() & df["Exam"].notna()).groupby("Student")["valid"].sum()
+    new["Average"] = new["Grand Total"] / valid_counts
     new.index.name = None
     broadsheet = new.swaplevel(1, 0, axis=1).sort_index(axis=1)
     return broadsheet

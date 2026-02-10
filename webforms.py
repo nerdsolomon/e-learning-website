@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
-from wtforms import StringField, SubmitField, PasswordField, TextAreaField, FileField, EmailField, FloatField
+from wtforms import StringField, SubmitField, PasswordField, TextAreaField, FileField, EmailField, FloatField, HiddenField
 
 
 class PostForm(FlaskForm):
@@ -14,6 +14,7 @@ class PostForm(FlaskForm):
 	check = PasswordField(validators=[DataRequired()])
 	email = EmailField(validators=[DataRequired()])
 	submit = SubmitField("Done")
+	hidden = HiddenField(validators=[DataRequired()], default="0000")
 
 
 class StudentForm(FlaskForm):
@@ -23,6 +24,7 @@ class StudentForm(FlaskForm):
 	sex = StringField(validators=[DataRequired()])
 	email = EmailField(validators=[DataRequired()])
 	password = PasswordField(validators=[DataRequired()])
+	hidden = HiddenField(validators=[DataRequired()], default="0000")
 	file = FileField()
 	remark = TextAreaField()
 	submit = SubmitField("Done")

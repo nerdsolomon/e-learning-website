@@ -207,7 +207,7 @@ def staffs():
     staffs = Staff.query.order_by(-Staff.id)
     if request.method == "POST":
         if form.name.data == "add":
-            new_staff = Staff(name=form.string.data, email=form.email.data, role=request.form["role"], password=generate_password_hash(0000))
+            new_staff = Staff(name=form.string.data, email=form.email.data, role=request.form["role"], password=generate_password_hash(form.hidden.data))
             store(new_staff) 
         elif form.name.data == "edit":
             staff = Staff.query.filter_by(id=request.form["staff"]).first()
@@ -260,7 +260,7 @@ def students(active, id):
             email=f"{form.name.data.lower()}{form.surname.data.lower()}@nerd.edu",
             sex=form.sex.data,
             image=process_image(form.file.data) if form.file.data and process_image(form.file.data) else flash("Invalid image type. Allowed types: .png, .jpg, .jpeg"),
-            password=generate_password_hash(0000),
+            password=generate_password_hash(form.hidden.data),
             room_id=id,
             session_id=active
             )
@@ -288,8 +288,10 @@ def result(id):
 @app.route("/broadsheet/<int:active>/<int:id>", methods=['POST', 'GET'])
 @login_required
 def broadsheets(active, id):
-	sheet = broadsheet(active, id)			
-	return render_template("broadsheet.html", tables=[sheet.to_html(classes="table table-hover table-bordered")])
+    sheet = broadsheet(active, id)
+    if sheet.empty:
+        flash("No results available for this class", "warning")
+    return render_template("broadsheet.html", tables=[sheet.to_html(classes="table table-hover table-bordered")])
 		
 
 @app.route('/view-scores/<int:id>', methods=['POST', 'GET'])
