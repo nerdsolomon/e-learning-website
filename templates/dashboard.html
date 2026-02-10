@@ -1,53 +1,98 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="container">
-<br>
-{% for message in get_flashed_messages() %}
-	<div class="alert alert-warning alert-dismissible fade show" role="alert">
-		{{ message }}
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div>
-{% endfor %}
+  <br />
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
 
-
-<div class="text-center f-5">
-	{% if account == "Student" and current_user.image %}
-		<img class="rounded" src="{{ url_for('static',filename='storage/'+current_user.image) }}" width="50"/>
-	{% else %}
-		<img class="rounded-circle m-3" src="{{ url_for('static',filename='default/default.png') }}" width="150"/>
-	{% endif %}
-	<br>
-	{% if account == "Staff" %}
-		<p class="display-4">{{ current_user.name }}</p>
-		<p class="display-6">{{ current_user.email }}</p>
-		<p class="fs-4">{{ current_user.role }}</p>
-		<a type="button" class="btn btn-secondary m-3 fw-bold btn-sm" data-bs-toggle="modal" href="#edit">Change password</a>
-	{% else %}
-		<p class="display-4">{{ current_user.name }} {{ current_user.other }} {{current_user.surname }}</p>
-		<p class="display-6">{{ current_user.email }}</p>
-	{% endif %}
-</div>
-
-<div class="modal" id="edit" tabindex="-1" aria-labelledby="edit" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h1 class="modal-title fs-6" id="edit">Change password</h1>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-			<form method="POST">
-				{{ form.hidden_tag() }}
-				{{ form.old(class="form-control", placeholder="Old password") }}<br>
-				{{ form.password(class="form-control", placeholder="New password") }}<br>
-				{{ form.check(class="form-control", placeholder="Confirm password") }}<br>
-				{{ form.submit(class="btn btn-secondary") }}
-			</form>
-		</div>
-	  </div>
-	</div>
+  <div class="text-center fs-5">
+    <img
+      class="rounded-circle m-3"
+      src="{% if account == 'Student' and current_user.image %}
+           {{ url_for('static', filename='storage/' ~ current_user.image) }}
+         {% else %}
+           {{ url_for('static', filename='default/default.png') }}
+         {% endif %}"
+      width="25%"
+      alt="Profile image"
+    />
   </div>
 
+  <div class="border-bottom border-secondary mb-2">
+    <small class="fw-bold">Name</small>
+    <p class="fs-3">{{ current_user.name }}</p>
+  </div>
+
+  {% if account == "Student" %}
+  <div class="border-bottom border-secondary mb-2">
+    <small class="fw-bold">Other</small>
+    <p class="fs-3">{{ current_user.other }}</p>
+  </div>
+
+  <div class="border-bottom border-secondary mb-2">
+    <small class="fw-bold">Surname</small>
+    <p class="fs-3">{{ current_user.surname }}</p>
+  </div>
+
+  <div class="border-bottom border-secondary mb-2">
+    <small class="fw-bold">Class</small>
+    <p class="fs-3">{{ current_user.room.title }}</p>
+  </div>
+  {% endif %}
+
+  <div class="border-bottom border-secondary mb-2">
+    <small class="fw-bold">Email</small>
+    <p class="fs-3">{{ current_user.email }}</p>
+  </div>
+
+  <a
+    type="button"
+    class="btn-dark btn mt-2 mb-2 form-control form-control-lg"
+    data-bs-toggle="modal"
+    href="#edit"
+    >Change password</a
+  >
+
+  <div
+    class="modal"
+    id="edit"
+    tabindex="-1"
+    aria-labelledby="edit"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-6" id="edit">Change password</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST">
+            {{ form.hidden_tag() }} {{ form.old(class="form-control",
+            placeholder="Old password") }}<br />
+            {{ form.password(class="form-control", placeholder="New password")
+            }}<br />
+            {{ form.check(class="form-control", placeholder="Confirm password")
+            }}<br />
+            {{ form.submit(class="btn btn-secondary") }}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

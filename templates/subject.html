@@ -11,9 +11,7 @@
 </div>
 {% endfor %}
 
-<p class="text-center fw-bold fs-5">{{ subject.room.title }}</p>
-
-<div class="card shadow">
+<div class="card shadow mb-4">
 	<div class="card-header lead fs-5 text-center">{{ subject.title }}</div>
 	<div class="card-body">
 		<p class="card-text fw-light">You are required to download the PDF for this subject and study before attempting the assessments.</p>
@@ -25,13 +23,10 @@
 	</div>
 </div>
 
-<br/><br/>
-
-<b>Assessments</b><br/><br/>
-
-<div class="card shadow">
+<div class="card shadow mb-4">
+	<div class="card-header lead fs-5 text-center">ASSESSMENT</div>
 	<div class="card-body">
-		<p class="lead fs-5">Important to Note :</p>
+		<p class="card-title fs-5">Important to Note :</p>
 		<p class="card-text fw-light">
 			You are required to select an answer before moving to the next question. When next is clicked, your choice will be submitted immediately, so revisiting a question is <b>NOT</b> an option.
 		</p>
@@ -42,6 +37,5 @@
     </div>
 </div>
 
-<br><br><br>
 </div>
 {% endblock %}

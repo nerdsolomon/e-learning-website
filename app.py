@@ -282,7 +282,7 @@ def students(active, id):
 def result(id):
     choices.clear(), answers.clear()
     sheet = results(id)
-    return render_template("result.html", tables=[sheet.to_html(justify="left",classes="table table-hover table-bordered")])
+    return render_template("result.html", tables=[sheet.to_html(index=False, justify="left",classes="table table-hover table-bordered")])
 
 
 @app.route("/broadsheet/<int:active>/<int:id>", methods=['POST', 'GET'])
