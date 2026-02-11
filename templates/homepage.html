@@ -16,18 +16,10 @@
     />
   </head>
   <body>
-    <nav
-      class="navbar bg-dark border-bottom border-body sticky-top"
-      data-bs-theme="dark"
-    >
-      <a class="navbar-brand ms-4">
-        <img
-          class="object-fit-cover"
-          src="{{ url_for('static',filename='default/nerd.png') }}"
-          width="45"
-        />
-        <span class="fs-18">nerdschool</span>
-      </a>
+    <nav class="navbar bg-dark border-bottom border-body sticky-top" data-bs-theme="dark">
+      <div class="col text-center">
+        <img src="{{ url_for('static',filename='default/nerd.png') }}" width="50" />
+      </div>
     </nav>
 
     <div class="container">
@@ -95,7 +87,6 @@
               {% endfor %}
               <form method="POST">
                 {{ form.hidden_tag() }}
-
                 <div class="form-floating">
                   <select class="form-select mb-2" name="type">
                     <option value="student">Student</option>
@@ -125,10 +116,7 @@
     <footer class="text-center p-5 bg-dark text-light">
       <b>Copyright ©️ nerdschool {{ time }}</b><br />
       <a class="btn text-light" href="https://nerdsolomon.github.io/portfolio">
-        <img
-          src="{{ url_for('static',filename='default/nerd.png') }}"
-          width="20"
-        />
+        <img src="{{ url_for('static',filename='default/nerd.png') }}" width="20" />
         nerdsolomon
       </a>
     </footer>

@@ -19,22 +19,19 @@ def rem(var):
 
 @app.context_processor
 def base():
-    time = date.strftime('%Y')
     active = Active.query.first()
     account = session.get("account")
     if current_user.is_authenticated and account:
         if account == "Student":
-            student = current_user 
             room = Class.query.filter_by(id=current_user.room.id).first()
             subjects = Subject.query.filter_by(room_id=room.id)
-            return dict(student=student, account=account, subjects=subjects, time=time, active=active, room=room)
+            return dict(student=current_user, account=account, subjects=subjects, active=active, room=room)
         elif account == "Staff":
-            staff = Staff.query.filter_by(id=current_user.id).first()
             room = Class.query.filter_by(staff_id=current_user.id).first()
-            if current_user.role == "Teacher" and room == None:
+            if current_user.role == "Teacher" and room is None:
                 flash("You've not been assigned a classroom")
-            return dict(room=room, time=time, active=active, account=account)
-    return dict(time=time, active=active)
+            return dict(room=room, active=active, account=account)
+    return dict(active=active)
 
 
 @app.route("/", methods=['POST', 'GET'])

@@ -53,20 +53,21 @@
     <div class="col-sm-4 mb-sm-0">
 	    <div class="card">
 		    <div class="card-body">
-		    Question : <span style="white-space:pre-wrap !important;">{{ cbt.question }}</span><br>
-		    Answer : {{ cbt.answer }}<br>
-	    	A : {{ cbt.opt_one }}<br>
-	    	B : {{ cbt.opt_two }}<br>
-	    	C : {{ cbt.opt_three }}<br>
-	    	Type : {{ cbt.type }}
-   		<div class="dropdown float-end">
-		       <a class="dropdown-toggle"></a>
-		       <div class="dropdown-content" style=" right: 0;">
-		    	  <a href="#form{{ cbt.id }}" data-bs-toggle="modal">Edit</a>
-		    	  <a href="{{url_for('question_delete', num=subject.id, id=cbt.id)}}">Delete</a>
-			   </div>
-		    </div>
-		    </div>
+          <div class="dropdown float-end">
+            <i>{{ cbt.type }}</i> <a class="dropdown-toggle"></a>
+            <div class="dropdown-items" style=" right: 0;">
+              <a href="#form{{ cbt.id }}" data-bs-toggle="modal">Edit</a>
+              <a href="{{url_for('question_delete', num=subject.id, id=cbt.id)}}">Delete</a>
+            </div>
+          </div>
+          <span style="white-space:pre-wrap !important;">{{ cbt.question }}</span>
+          <ol type="A">
+            <li>{{ cbt.opt_one }}</li> 
+            <li>{{ cbt.opt_two }}</li>
+            <li>{{ cbt.opt_three }}</li>
+          </ol>
+          <b>Answer : {{ cbt.answer }}</b>
+        </div>
 	    </div>
     </div>
     

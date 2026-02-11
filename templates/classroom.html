@@ -16,7 +16,7 @@
 			<div class="input-group gap-2" style="width:30rem;">
 			{{ form.hidden_tag() }}
 			<input type="hidden" value="subject" name="name">	
-			{{ form.string(class="form-control rounded",placeholder="Subject") }}
+			{{ form.string(class="form-control rounded",placeholder="Add Subject") }}
 			{{ form.submit(class='btn rounded fw-bold btn-secondary') }}
 			</div>
 		</form>
@@ -26,7 +26,6 @@
     <th scope="col">Subject</th>
 	<th scope="col">File</th>
 	<th scope="col">Upload</th>
-	<th scope="col"></th>
 	<th scope="col"></th>
     </tr>
   </thead>
@@ -52,16 +51,18 @@
 	 <form method = 'POST' enctype="multipart/form-data">
         <div class="input-group">
     	{{ form.hidden_tag() }}
-         <input type="hidden" value="{{ subject.id }}" name="subject">
+        <input type="hidden" value="{{ subject.id }}" name="subject">
      	<input type="hidden" value="material" name="name">
  		{{ form.file(class="form-control form-control-sm") }}
      	{{ form.submit(class="btn btn-secondary btn-sm") }}
      	</div>
      </form>
 	 </td>
-	 <td><a class="btn btn-sm btn-secondary" href="{{url_for('subject_questions', id=subject.id)}}">Questions</a></td>
-    <td><a class="btn btn-sm btn-secondary" href="{{url_for('view_scores', id=subject.id)}}">Grades</a></td>
-	<td><a class="btn btn-sm btn-danger" href="{{url_for('subject_delete', id=subject.id, num=room.id)}}">Delete</a></td>
+	 <td>
+		<a class="btn btn-sm btn-secondary" href="{{url_for('subject_questions', id=subject.id)}}">Questions</a>
+    	<a class="btn btn-sm btn-secondary" href="{{url_for('view_scores', id=subject.id)}}">Grades</a>
+		<a class="btn btn-sm btn-danger" href="{{url_for('subject_delete', id=subject.id, num=room.id)}}">Delete</a>
+	</td>
     </tr>
     {% endfor %}
   </tbody>
