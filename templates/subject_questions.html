@@ -123,8 +123,13 @@
     
     <a href="{{ url_for('subject_questions',id=subject.id, page=cbts.next_num) }}" class="btn btn-sm btn-outline-dark {% if cbts.page == cbts.pages %}disabled{% endif %}">Next</a>
 </div>
+<br>
+<div class="text-center">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard"
+      >Return to dashboard</a
+    >
+  </div>
 
-
-<br><br>
+<br>
 </div>
 {% endblock %}
