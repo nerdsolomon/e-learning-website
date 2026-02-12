@@ -1,129 +1,101 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ url_for('static',filename='custom.css') }}"
-    />
-  </head>
-  <body>
-    <nav class="navbar bg-dark border-bottom border-body sticky-top" data-bs-theme="dark">
-      <div class="col text-center">
-        <img src="{{ url_for('static',filename='default/nerd.png') }}" width="50" />
-      </div>
-    </nav>
+{% extends "base.html" %} {% block content %}
 
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6 mb-sm-0 p-3">
-          <div class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img
-                  src="{{ url_for('static', filename='default/slideTwo.png')}}"
-                  class="w-100"
-                />
-              </div>
-              <div class="carousel-item">
-                <img
-                  src="{{ url_for('static', filename='default/slideOne.png')}}"
-                  class="w-100"
-                />
-              </div>
-            </div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 mb-sm-0 p-4">
+      <div class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img
+              src="{{ url_for('static', filename='default/slideTwo.png')}}"
+              class="w-100"
+            />
           </div>
-        </div>
-        <div class="col-sm-6 p-4">
-          {% if active %}
-          <p class="fw-light fs-5">Session</p>
-          <p class="display-6">
-            {{ active.session.session }} : {{ active.session.term }}
-          </p>
-          {% endif %}
-
-          <div class="row pt-2 pb-2">
-            <div class="col">
-              <p class="fw-light fs-5">Classrooms</p>
-              <p class="display-5">{{ class_num }}+</p>
-            </div>
-            <div class="col">
-              <p class="fw-light fs-5">Subjects</p>
-              <p class="display-5">{{ subject_num }}+</p>
-            </div>
-            <div class="col">
-              <p class="fw-light fs-5">Students</p>
-              <p class="display-5">{{ student_num }}+</p>
-            </div>
-            <div class="col">
-              <p class="fw-light fs-5">Staffs</p>
-              <p class="display-5">{{ staff_num }}+</p>
-            </div>
-          </div>
-
-          <div class="card shadow">
-            <div class="card-body text-center">
-              {% for message in get_flashed_messages() %}
-              <div
-                class="alert alert-warning p-1 alert-dismissible fade show"
-                role="alert"
-              >
-                {{ message }}
-                <button
-                  type="button"
-                  class="btn-close p-2"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"
-                ></button>
-              </div>
-              {% endfor %}
-              <form method="POST">
-                {{ form.hidden_tag() }}
-                <div class="form-floating">
-                  <select class="form-select mb-2" name="type">
-                    <option value="student">Student</option>
-                    <option value="staff">Staff</option>
-                  </select>
-                  <label for="floatingSelect">Login as</label>
-                </div>
-                <div class="form-floating">
-                  {{ form.email(placeholder="Email", class='form-control mb-2',
-                  id="floatingInput") }}
-                  <label for="floatingInput">Email</label>
-                </div>
-                <div class="form-floating">
-                  {{ form.password(placeholder="Password", class='form-control
-                  mb-2', id="floatingPassword") }}
-                  <label for="floatingPassword">Password</label>
-                </div>
-                <button type="submit" class="btn form-control btn-dark">
-                  Login
-                </button>
-              </form>
-            </div>
+          <div class="carousel-item">
+            <img
+              src="{{ url_for('static', filename='default/slideOne.png')}}"
+              class="w-100"
+            />
           </div>
         </div>
       </div>
     </div>
-    <footer class="text-center p-5 bg-dark text-light">
-      <b>Copyright ©️ nerdschool {{ time }}</b><br />
-      <a class="btn text-light" href="https://nerdsolomon.github.io/portfolio">
-        <img src="{{ url_for('static',filename='default/nerd.png') }}" width="20" />
-        nerdsolomon
-      </a>
-    </footer>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-  </body>
-</html>
+    <div class="col-sm-6 p-4">
+      {% if active %}
+      <p class="fw-light fs-5">Session</p>
+      <p class="display-6">
+        {{ active.session.session }} : {{ active.session.term }}
+      </p>
+      {% endif %}
+
+      <div class="row pt-2 pb-2">
+        <div class="col">
+          <p class="fw-light fs-5">Classrooms</p>
+          <p class="display-5">{{ class_num }}+</p>
+        </div>
+        <div class="col">
+          <p class="fw-light fs-5">Subjects</p>
+          <p class="display-5">{{ subject_num }}+</p>
+        </div>
+        <div class="col">
+          <p class="fw-light fs-5">Students</p>
+          <p class="display-5">{{ student_num }}+</p>
+        </div>
+        <div class="col">
+          <p class="fw-light fs-5">Staffs</p>
+          <p class="display-5">{{ staff_num }}+</p>
+        </div>
+      </div>
+
+      <div class="card shadow">
+        <div class="card-body text-center">
+          {% for message in get_flashed_messages() %}
+          <div
+            class="alert alert-warning p-1 alert-dismissible fade show"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="btn-close p-2"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          {% endfor %}
+          <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-floating">
+              <select class="form-select mb-2" name="type">
+                <option value="student">Student</option>
+                <option value="staff">Staff</option>
+              </select>
+              <label for="floatingSelect">Login as</label>
+            </div>
+            <div class="form-floating">
+              {{ form.email(placeholder="Email", class='form-control mb-2',
+              id="floatingInput") }}
+              <label for="floatingInput">Email</label>
+            </div>
+            <div class="form-floating">
+              {{ form.password(placeholder="Password", class='form-control
+              mb-2', id="floatingPassword") }}
+              <label for="floatingPassword">Password</label>
+            </div>
+            <button type="submit" class="btn form-control btn-dark">
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="bg-dark">
+  © {{ time }} nerdschool | Developed by
+  <a href="https://nerdsolomon.github.io/portfolio">
+    <img src="{{ url_for('static',filename='default/nerd.png') }}" width="20" />
+    nerdsolomon
+  </a>
+</footer>
+{% endblock %}

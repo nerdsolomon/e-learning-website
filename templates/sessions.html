@@ -46,21 +46,27 @@
         <td>{{ session.session }}</td>
         <td>{{ session.term }}</td>
         <td>{{ session.date }}</td>
-        {% if session %}
-			{% if active and active.session.id == session.id %}
-        		<td class="text-success fw-bold">Active</td>
-        	{% else %}
-				<form method="POST">
-					<input type="hidden" value="active" name="name" />
-					<input type="hidden" value="{{ session.id }}" name="session" />
-					<td><button class="btn btn-sm btn-secondary" type="submit">Activate</button></td>
-				</form>
-        	{% endif %}
-		{% endif %}
+        {% if session %} {% if active and active.session.id == session.id %}
+        <td class="text-success fw-bold">Active</td>
+        {% else %}
+        <form method="POST">
+          <input type="hidden" value="active" name="name" />
+          <input type="hidden" value="{{ session.id }}" name="session" />
+          <td>
+            <button class="btn btn-sm btn-secondary" type="submit">
+              Activate
+            </button>
+          </td>
+        </form>
+        {% endif %} {% endif %}
       </tr>
       {% endfor %}
     </tbody>
   </table>
+
+  <div class="text-center">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Return to dashboard</a>
+  </div>
 
   <br /><br />
 </div>

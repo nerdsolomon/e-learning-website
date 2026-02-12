@@ -10,7 +10,6 @@ app.config["SECRET_KEY"] = "school"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///school.db"
 #app.config["SECRET_KEY"] = os.environ['KEY']
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
-#app.config['GOOGLE_APPLICATION_CREDENTIALS'] = os.environ['CREDENTIALS']
 
 FILE_FOLDER = "static/storage"
 if not os.path.exists(FILE_FOLDER):

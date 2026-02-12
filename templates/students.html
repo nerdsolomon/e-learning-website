@@ -37,7 +37,7 @@
    	<td>{{ student.email }}</td>
 	<td>{{ student.remark }}</td>
 	<td><a class='btn btn-secondary btn-sm' data-bs-toggle="modal" href="#editStudent">Edit</a></td>
-	<td><a class='btn btn-danger btn-sm' href="{{url_for('student_delete', id=student.id, active=active.session.id, num=room.id)}}">Delete</a></td>
+	<td><a class='btn btn-danger btn-sm' href="{{url_for('student_delete', id=student.id, active=active.session.id, num=current_user.room_id[0].id)}}">Delete</a></td>
     </tr>
 
 <div class="modal" id="editStudent" tabindex="-1" aria-hidden="true">
@@ -71,6 +71,10 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
+
+<div class="text-center">
+	<a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Return to dashboard</a>
 </div>
 
 <div class="modal" id="addStudent" tabindex="-1" aria-labelledby="addStudentLabel" aria-hidden="true">

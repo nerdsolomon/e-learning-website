@@ -21,28 +21,22 @@ def rem(var):
 def base():
     active = Active.query.first()
     account = session.get("account")
+    time = date.strftime('%Y')
     if current_user.is_authenticated and account:
-        if account == "Student":
-            room = Class.query.filter_by(id=current_user.room.id).first()
-            subjects = Subject.query.filter_by(room_id=room.id)
-            return dict(student=current_user, account=account, subjects=subjects, active=active, room=room)
-        elif account == "Staff":
+        if account == "Staff":
             room = Class.query.filter_by(staff_id=current_user.id).first()
             if current_user.role == "Teacher" and room is None:
-                flash("You've not been assigned a classroom")
-            return dict(room=room, active=active, account=account)
-    return dict(active=active)
+                flash("You've not been assigned a classroom", "danger")
+    return dict(active=active, account=account, time=time)
 
 
 @app.route("/", methods=['POST', 'GET'])
 def homepage():
     form = PostForm()
-    time = date.strftime('%Y')
-    active = Active.query.first()
     students, staffs, classrooms, subjects = Student.query.count(), Staff.query.count(), Class.query.count(), Subject.query.count()
     if request.method == "POST":
         login_type = request.form["type"]
-        user = Staff.query.filter_by(email=form.email.data.lower()).first() if login_type == "staff" else Student.query.filter_by(session_id=active.session.id, email=form.email.data.lower()).first()
+        user = Staff.query.filter_by(email=form.email.data.lower()).first() if login_type == "staff" else Student.query.filter_by(session_id=Active.query.first().session.id, email=form.email.data.lower()).first()
         if user:
             if check_password_hash(user.password,form.password.data):
                 login_user(user)
@@ -53,7 +47,7 @@ def homepage():
                 flash("Incorrect password. Try again...")
         else:
             flash("User does not exist.")
-    return render_template("homepage.html", student_num=students, staff_num=staffs, subject_num=subjects, class_num=classrooms, time=time, form=form)
+    return render_template("homepage.html", student_num=students, staff_num=staffs, subject_num=subjects, class_num=classrooms, form=form)
 
 
 @app.route('/logout')
@@ -86,9 +80,8 @@ def save_sheet(active, id):
 @login_required
 def dashboard():
     form = PostForm()
-    id = current_user.id
-    staff = Staff.query.filter_by(id=id).first()
-    if request.method == "POST":
+    staff = Staff.query.filter_by(id=current_user.id).first()
+    if form.validate_on_submit():
         if check_password_hash(staff.password, form.old.data):
             if form.password.data == form.check.data:
                 staff.password = form.password.data
@@ -98,7 +91,7 @@ def dashboard():
                 flash("New password don't match")
         else:
             flash("Old password is incorrect")        
-    return render_template("dashboard.html", form=form)
+    return render_template("dashboard.html", form=form, classrooms=Class.query.all(), staffs=Staff.query.all())
 
  
 @app.route('/subject/<int:id>')

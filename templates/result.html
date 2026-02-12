@@ -14,11 +14,11 @@
   {% endif %}
 
   <p class="text-center">
-      {{ current_user.name }} {{ current_user.other }} {{ current_user.surname
-      }}<br />
-      {{ current_user.room.title }}<br />
-      {{ active.session.session }} {{ active.session.term }}<br />
-      <b>Class Teacher : </b>{{ current_user.room.staff.name }}<br />
+    {{ current_user.name }} {{ current_user.other }} {{ current_user.surname
+    }}<br />
+    {{ current_user.room.title }}<br />
+    {{ active.session.session }} {{ active.session.term }}<br />
+    <b>Class Teacher : </b>{{ current_user.room.staff.name }}<br />
   </p>
 
   <div class="table-responsive">
@@ -28,6 +28,12 @@
   <p class="text-center">
     <b>Class Teacher's Remark : </b>{{ current_user.remark }}
   </p>
+
+  <div class="text-center">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard"
+      >Return to dashboard</a
+    >
+  </div>
 
   <br />
 </div>

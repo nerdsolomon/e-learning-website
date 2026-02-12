@@ -11,9 +11,9 @@
 </div>
 {% endfor %}
 
-<p class="text-center fw-bold">{{ room.title }} BROADSHEET</p>
+<p class="text-center fw-bold">{{ current_user.room_id[0].title }} BROADSHEET</p>
 
-<p class="text-center"><b>Class Teacher : </b>{{ room.staff.name }}</p>
+<p class="text-center"><b>Class Teacher : </b>{{ current_user.name }}</p>
 
 <div class="table-responsive">
 	{% for table in tables %}
@@ -21,14 +21,10 @@
 	{% endfor %}
 </div>
 
-<br/>
+<div class="text-center">
+	<a class="btn btn-sm btn-secondary" href="/dashboard">Return to dashboard</a>
+	<a class="btn btn-sm btn-outline-success" href="{{url_for('save_sheet', active=active.session.id, id=current_user.room_id[0].id)}}">Save as Excel</a>
+</div>
 
-<center>
-<a class="btn btn-outline-success" href="{{url_for('save_sheet', active=active.session.id, id=room.id)}}">Save as Excel</a>
-</center>
-
-
-
-<br/><br/>
 </div>
 {% endblock %}

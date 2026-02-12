@@ -1,9 +1,11 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="container">
-  <br />
+<div class="container mb-5">
   {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <div
+    class="alert alert-warning alert-dismissible fade show mt-2"
+    role="alert"
+  >
     {{ message }}
     <button
       type="button"
@@ -14,53 +16,195 @@
   </div>
   {% endfor %}
 
-  <div class="text-center fs-5">
-    <img
-      class="rounded-circle m-3"
-      src="{% if account == 'Student' and current_user.image %}
-           {{ url_for('static', filename='storage/' ~ current_user.image) }}
-         {% else %}
-           {{ url_for('static', filename='default/default.png') }}
-         {% endif %}"
-      width="25%"
-      alt="Profile image"
-    />
+  <div class="row mt-2">
+    <div class="col-4 col-sm-2 d-flex align-items-center">
+      <div>
+        <img
+          class="rounded-circle m-3 w-100"
+          src="{% if account == 'Student' and current_user.image %}
+            {{ url_for('static', filename='storage/' ~ current_user.image) }}
+          {% else %}
+            {{ url_for('static', filename='default/default.png') }}
+          {% endif %}"
+        />
+      </div>
+    </div>
+
+    <div class="col d-flex align-items-center">
+      <div>
+        <b style="font-size: 12px">Name</b>
+        <div class="fs-6">
+          {{ current_user.name }} {% if account == "Student" %} {{
+          current_user.other }} {{ current_user.surname }} {% endif %}
+        </div>
+        <b style="font-size: 12px">Email</b>
+        <div class="fs-6">{{ current_user.email }}</div>
+        {% if account == "Student" %}
+        <b style="font-size: 12px">Class</b>
+        <div class="fs-6">{{ current_user.room.title }}</div>
+        {% endif %}
+      </div>
+    </div>
   </div>
 
-  <div class="border-bottom border-secondary mb-2">
-    <small class="fw-bold">Name</small>
-    <p class="fs-3">{{ current_user.name }}</p>
-  </div>
+  <hr class="mt-2" />
 
   {% if account == "Student" %}
-  <div class="border-bottom border-secondary mb-2">
-    <small class="fw-bold">Other</small>
-    <p class="fs-3">{{ current_user.other }}</p>
+
+  <div class="row g-2">
+    {% for subject in current_user.room.subject_id %}
+    <div class="col-6 col-sm-4">
+      <div class="card shadow">
+        <a
+          class="card-body d-flex align-items-center"
+          style="text-decoration: none; height: 100px"
+          href="{{url_for('subject', id= subject.id)}}"
+        >
+          <p class="card-text">{{ subject.title }}</p>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 
-  <div class="border-bottom border-secondary mb-2">
-    <small class="fw-bold">Surname</small>
-    <p class="fs-3">{{ current_user.surname }}</p>
+  {% else %} {% if current_user.role == "Teacher" %}
+
+  <div class="row g-2">
+    <div class="col-6">
+      <div class="card shadow">
+        <a
+          class="card-body d-flex align-items-center"
+          style="text-decoration: none; height: 100px"
+          href="{{url_for('students', active=active.session.id, id=current_user.room_id[0].id)}}"
+        >
+          <div>
+            <b>Students</b>
+            <div class="display-6">
+              {{ current_user.room_id[0].student_id | length }}
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card shadow">
+        <a
+          class="card-body d-flex align-items-center"
+          style="text-decoration: none; height: 100px"
+          href="{{url_for('classroom', id=current_user.room_id[0].id)}}"
+        >
+          <div>
+            <b>Subjects</b>
+            <div class="display-6">
+              {{ current_user.room_id[0].subject_id | length }}
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card shadow">
+        <a
+          class="card-body d-flex align-items-center"
+          style="text-decoration: none; height: 100px"
+          href="{{url_for('broadsheets', active=active.session.id, id=current_user.room_id[0].id)}}"
+        >
+          <div>
+            <b class="card-text">Broadsheet</b>
+            <div class="fs-5">{{ current_user.room_id[0].title }}</div>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
 
-  <div class="border-bottom border-secondary mb-2">
-    <small class="fw-bold">Class</small>
-    <p class="fs-3">{{ current_user.room.title }}</p>
-  </div>
-  {% endif %}
+  {% else %}
 
-  <div class="border-bottom border-secondary mb-2">
-    <small class="fw-bold">Email</small>
-    <p class="fs-3">{{ current_user.email }}</p>
+  <div class="row g-2">
+    <div class="col-6">
+      <div class="card shadow">
+        <a
+          class="card-body d-flex align-items-center"
+          style="text-decoration: none; height: 100px"
+          href="/classes"
+        >
+          <div>
+            <b>Classrooms</b>
+            <div class="display-6">{{ classrooms | length}}</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card shadow">
+        <a
+          class="card-body d-flex align-items-center"
+          style="text-decoration: none; height: 100px"
+          href="/staffs"
+        >
+          <div>
+            <b>Staffs</b>
+            <div class="display-6">{{ staffs | length}}</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card shadow">
+        <a
+          class="card-body d-flex align-items-center"
+          style="text-decoration: none; height: 100px"
+          href="/sessions"
+        >
+          <div>
+            <b>Session</b>
+            <div class="fs-5">
+              {{ active.session.session }} : {{ active.session.term }}
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
+  {% endif %} {% endif %}
 
-  <a
-    type="button"
-    class="btn-dark btn mt-2 mb-2 form-control form-control-lg"
-    data-bs-toggle="modal"
-    href="#edit"
-    >Change password</a
-  >
+  <hr class="mt-4" />
+  <div class="row g-2 mt-2">
+    {% if account == "Student" %}
+    <div class="col-6 col-sm-4">
+      <div class="card shadow">
+        <a
+          class="card-body"
+          style="text-decoration: none"
+          href="{{url_for('result', id=current_user.id)}}"
+        >
+          <p class="card-text">Final Results</p>
+        </a>
+      </div>
+    </div>
+    {% endif %}
+    <div class="col-6 col-sm-4">
+      <div class="card shadow">
+        <a
+          class="card-body"
+          type="button"
+          style="text-decoration: none"
+          data-bs-toggle="modal"
+          href="#edit"
+        >
+          <p class="card-text">Change password</p>
+        </a>
+      </div>
+    </div>
+
+    <div class="col-6 col-sm-4">
+      <div class="card bg-danger text-light shadow">
+        <a class="card-body" style="text-decoration: none" href="/logout">
+          <p class="card-text">Logout</p>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <div
     class="modal"

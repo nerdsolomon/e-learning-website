@@ -1,41 +1,69 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="container">
-<br>
+  <br />
 
-{% for message in get_flashed_messages() %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-	{{ message }}
-	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
 
-<div class="card shadow mb-4">
-	<div class="card-header lead fs-5 text-center">{{ subject.title }}</div>
-	<div class="card-body">
-		<p class="card-text fw-light">You are required to download the PDF for this subject and study before attempting the assessments.</p>
-	 {% if subject.file %}
-		<a class="nav-link link-success" href="{{url_for('download', filename=subject.file)}}">Download<a>
-	{% else %}
-		<a class="nav-link disabled">No File</a>
-	{% endif %}
-	</div>
-</div>
-
-<div class="card shadow mb-4">
-	<div class="card-header lead fs-5 text-center">ASSESSMENT</div>
-	<div class="card-body">
-		<p class="card-title fs-5">Important to Note :</p>
-		<p class="card-text fw-light">
-			You are required to select an answer before moving to the next question. When next is clicked, your choice will be submitted immediately, so revisiting a question is <b>NOT</b> an option.
-		</p>
-        <div class="row text-center">
-        	<a class="col nav-link link-primary {% if grade.test %} text-secondary disabled {% endif %}" aria-disabled="true" href="{{url_for('cbt', id=subject.id, type='Test')}}">Begin Test</a>
-        	<a class="nav-link col link-primary {% if grade.exam %} text-secondary disabled {% endif %}" aria-disabled="true" href="{{url_for('cbt', id=subject.id, type='Exam')}}">Begin Exam</a>
-        </div>
+  <div class="card shadow mb-4">
+    <div class="card-header lead fs-5 text-center">{{ subject.title }}</div>
+    <div class="card-body">
+      <p class="card-text fw-light">
+        You are required to download the PDF for this subject and study before
+        attempting the assessments.
+      </p>
+      {% if subject.file %}
+      <a
+        class="nav-link link-success"
+        href="{{url_for('download', filename=subject.file)}}"
+        >Download</a
+      >
+      {% else %}
+      <a class="nav-link disabled">No File</a>
+      {% endif %}
     </div>
-</div>
+  </div>
 
+  <div class="card shadow mb-4">
+    <div class="card-header lead fs-5 text-center">ASSESSMENT</div>
+    <div class="card-body">
+      <p class="card-title fs-5">Important to Note :</p>
+      <p class="card-text fw-light">
+        You are required to select an answer before moving to the next question.
+        When next is clicked, your choice will be submitted immediately, so
+        revisiting a question is <b>NOT</b> an option.
+      </p>
+      <div class="row text-center">
+        <a
+          class="col nav-link link-primary {% if grade.test %} text-secondary disabled {% endif %}"
+          aria-disabled="true"
+          href="{{url_for('cbt', id=subject.id, type='Test')}}"
+          >Begin Test</a
+        >
+        <a
+          class="nav-link col link-primary {% if grade.exam %} text-secondary disabled {% endif %}"
+          aria-disabled="true"
+          href="{{url_for('cbt', id=subject.id, type='Exam')}}"
+          >Begin Exam</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard"
+      >Return to dashboard</a
+    >
+  </div>
 </div>
 {% endblock %}
