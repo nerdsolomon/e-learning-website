@@ -175,16 +175,13 @@ def classes():
     staff = Staff.query.filter_by(role="Teacher").order_by(Staff.id)
     classes = Class.query.order_by(Class.id)
     if request.method == "POST":
-        if form.name.data == "class":
-            new_class = Class(title=form.string.data.upper())
+        if form.name.data == "new":
+            new_class = Class(title=form.string.data.upper(), staff_id=request.form["staff"])
             store(new_class)
-        elif form.name.data == "staff":
-            selected_class = Class.query.get(request.form["room"])
-            selected_class.staff_id = request.form["staff"]
-            store(selected_class)
         elif form.name.data == "edit":
             selected_class = Class.query.get(request.form["room"])
             selected_class.title = form.string.data.upper()
+            selected_class.staff_id = request.form["staff"]
             store(selected_class)
     return render_template('classes.html', classes=classes, form=form, staffs=staff)
 
@@ -215,23 +212,20 @@ def classroom(id):
     form = PostForm()
     subjects = Subject.query.filter_by(room_id=id).order_by(-Subject.id)
     if request.method == "POST":
-        if form.name.data == "subject":
+        if form.name.data == "new":
             new_subject = Subject(title=form.string.data.upper(), room_id=id)
             store(new_subject)
-            form.string.data = ""
-        elif form.name.data == "material":
+        elif form.name.data == "edit":
             subject = Subject.query.filter_by(id=request.form["subject"]).first()
-            if subject.file:
-                os.remove(os.path.join(app.config["FILE_FOLDER"], subject.file))
-            file = form.file.data
-            file_name = subject.room.title + "_" + secure_filename(file.filename)
-            file.save(os.path.join(app.config["FILE_FOLDER"], file_name))
-            subject.file = file_name
-            store(subject)  
-        elif form.name.data == "sub":
-            subject = Subject.query.filter_by(id=request.form["subject"]).first()
+            if form.file.data:
+                if subject.file:
+                    os.remove(os.path.join(app.config["FILE_FOLDER"], subject.file))
+                file = form.file.data
+                file_name = subject.room.title + "_" + secure_filename(file.filename)
+                file.save(os.path.join(app.config["FILE_FOLDER"], file_name))
+                subject.file = file_name
             subject.title = form.string.data.upper()
-            store(subject)
+            store(subject)  
     return render_template('classroom.html', subjects=subjects, form=form)
 
 

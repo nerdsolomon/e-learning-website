@@ -1,103 +1,80 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="container">
-  <br />
+<div class="container"><br />
 
   {% for message in get_flashed_messages() %}
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{ message }}
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   {% endfor %}
 
-  <form method="POST" class="mb-2">
-    <div class="input-group gap-2" style="width: 20rem">
-      {{ form.hidden_tag() }}
-      <input type="hidden" value="subject" name="name" />
-      {{ form.string(class="form-control rounded",placeholder="Add Subject") }}
-      {{ form.submit(class='btn rounded fw-bold btn-secondary') }}
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Back</a>
+    <a class="btn btn-secondary btn-sm mb-2" href="#new_subject" data-bs-toggle="modal">New</a>
+  </div>
+  
+  <div class="modal" id="new_subject" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form method="POST">
+            <div class="modal-body">
+              {{ form.hidden_tag() }}
+              {{ form.name(type="hidden", value="new") }}
+              {{ form.string(class="form-control",placeholder="Subject") }}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              {{ form.submit(class='btn btn-secondary') }}
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-  </form>
-  <div class="table-responsive">
+
     <table class="table table-hover table-bordered">
-      <thead>
-        <th scope="col">Subject</th>
-        <th scope="col">File</th>
-        <th scope="col">Upload</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-      </thead>
       <tbody>
         {% for subject in subjects %}
         <tr>
-          <td>
-            <form method="POST">
-              <input type="hidden" value="{{ subject.id }}" name="subject" />
-              <input type="hidden" value="sub" name="name" />
-              {{ form.hidden_tag() }} {{ form.string(value=subject.title,
-              style="border: 0; background-color: transparent;
-              border-radius:0;", class="form-control") }}
-            </form>
-          </td>
+          <td>{{ subject.title }}</td>
           <td>
             {% if subject.file %}
-            <a
-              class="nav-link"
-              href="{{url_for('download', filename=subject.file)}}"
-              >Download</a
-            >
+            <a style="text-decoration:none" href="{{url_for('download', filename=subject.file)}}">Download</a>
             {% else %}
-            <a class="nav-link text-danger">No file</a>
+            <b class="text-danger">No file</b>
             {% endif %}
-          </td>
-          <td>
-            <form method="POST" enctype="multipart/form-data">
-              <div class="input-group">
-                {{ form.hidden_tag() }}
-                <input type="hidden" value="{{ subject.id }}" name="subject" />
-                <input type="hidden" value="material" name="name" />
-                {{ form.file(class="form-control form-control-sm") }} {{
-                form.submit(class="btn btn-secondary btn-sm") }}
+            <div class="dropdown float-end">
+              <b>⋮</b>
+              <div class="dropdown-items" style=" right: 0;">
+                <a href="#upload_file" data-bs-toggle="modal">Edit</a>
+                <a href="{{url_for('subject_questions', id=subject.id)}}">Questions</a>
+                <a href="{{url_for('view_scores', id=subject.id)}}">Grades</a>
+                <a href="{{url_for('subject_delete', id=subject.id, num=current_user.room_id[0].id)}}">Delete</a>
               </div>
-            </form>
-          </td>
-          <td>
-            <a
-              class="btn btn-sm btn-secondary"
-              href="{{url_for('subject_questions', id=subject.id)}}"
-              >Questions</a
-            >
-          </td>
-          <td>
-            <a
-              class="btn btn-sm btn-secondary"
-              href="{{url_for('view_scores', id=subject.id)}}"
-              >Grades</a
-            >
-          </td>
-          <td>
-            <a
-              class="btn btn-sm btn-danger"
-              href="{{url_for('subject_delete', id=subject.id, num=current_user.room_id[0].id)}}"
-              >Delete</a
-            >
+            </div>
+            <div class="modal" id="upload_file" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <form method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                      {{ form.hidden_tag() }}
+                      <input type="hidden" value="{{ subject.id }}" name="subject" />
+                      {{ form.name(type="hidden", value="edit") }}
+                      {{ form.string(value=subject.title, class="form-control mb-2") }}
+                      {{ form.file(class="form-control") }}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      {{ form.submit(class='btn btn-secondary') }}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-  </div>
-
-  <div class="text-center">
-    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard"
-      >Return to dashboard</a
-    >
-  </div>
 </div>
 {% endblock %}

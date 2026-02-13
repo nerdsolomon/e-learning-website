@@ -14,60 +14,76 @@
   </div>
   {% endfor %}
 
-  <p class="fw-bold fs-5">Sessions</p>
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Back</a>
+    <a
+      class="btn btn-secondary btn-sm mb-2"
+      href="#new_session"
+      data-bs-toggle="modal"
+      >New</a
+    >
+  </div>
+
+  <div class="modal" id="new_session" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="POST">
+          <div class="modal-body">
+            {{ form.hidden_tag() }}
+            <input type="hidden" value="session" name="name" />
+            {{form.string(class='form-control mb-2', placeholder="yyyy/yy") }}
+            <select class="form-select" name="term">
+              <option selected value="First Term">First Term</option>
+              <option value="Second Term">Second Term</option>
+              <option value="Third Term">Third Term</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            {{ form.submit(class='btn btn-secondary') }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <table class="table table-hover table-bordered">
-    <caption class="caption-top">
-      <form method="POST">
-        <div class="input-group gap-2" style="width: 30rem">
-          {{ form.hidden_tag() }}
-          <input type="hidden" value="session" name="name" />
-          {{form.string(class='form-control', placeholder="2023/24") }}
-          <select class="form-select" name="term">
-            <option selected value="First Term">First Term</option>
-            <option value="Second Term">Second Term</option>
-            <option value="Third Term">Third Term</option>
-          </select>
-          {{ form.submit(class='btn rounded btn-secondary') }}
-        </div>
-      </form>
-    </caption>
     <thead>
-      <tr>
-        <th scope="col">Session</th>
-        <th scope="col">Term</th>
-        <th scope="col">Date</th>
-        <th scope="col">Status</th>
-      </tr>
+      <th scope="col">Session</th>
+      <th scope="col">Date added</th>
     </thead>
     <tbody>
       {% for session in sessions %}
       <tr>
-        <td>{{ session.session }}</td>
-        <td>{{ session.term }}</td>
-        <td>{{ session.date }}</td>
-        {% if session %} {% if active and active.session.id == session.id %}
-        <td class="text-success fw-bold">Active</td>
-        {% else %}
-        <form method="POST">
-          <input type="hidden" value="active" name="name" />
-          <input type="hidden" value="{{ session.id }}" name="session" />
-          <td>
-            <button class="btn btn-sm btn-secondary" type="submit">
-              Activate
-            </button>
-          </td>
-        </form>
-        {% endif %} {% endif %}
+        <td>{{ session.session }} : {{ session.term }}</td>
+        <td>
+          {{ session.date }}
+          <div class="dropdown float-end">
+            <b>⋮</b>
+            <div class="dropdown-items" style="right: 0">
+              {% if session %} {% if active and active.session.id == session.id
+              %}
+              <a class="text-success fw-bold">Active</a>
+              {% else %}
+              <form method="POST">
+                <input type="hidden" value="active" name="name" />
+                <input type="hidden" value="{{ session.id }}" name="session" />
+                <button type="submit">Activate</button>
+              </form>
+              {% endif %} {% endif %}
+              <a href="">Delete</a>
+            </div>
+          </div>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-
-  <div class="text-center">
-    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Return to dashboard</a>
-  </div>
-
-  <br /><br />
 </div>
 {% endblock %}

@@ -10,7 +10,7 @@ app.config["SECRET_KEY"] = "school"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///school.db"
 #app.config["SECRET_KEY"] = os.environ['KEY']
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
-
+#  ⋯   ⋮
 FILE_FOLDER = "static/storage"
 if not os.path.exists(FILE_FOLDER):
 	os.makedirs(FILE_FOLDER)

@@ -1,59 +1,86 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
-	<div class="container">
-	<br>
+<div class="container">
+  <br />
 
-		{% for message in get_flashed_messages() %}
-		<div class="alert alert-success alert-dismissible fade show" role="alert">
-			{{ message }}
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
-		{% endfor %}
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
 
-		<p class="text-center f-5 fw-bold">{{ subject.title }}</p>
-	
-		<form method="POST">
-			<div class="input-group gap-2 mb-3" style="width: 30rem">
-				{{ form.hidden_tag() }}
-				<select class="form-select" name="student">
-					<option>Student</option>
-					{% for student in students %}
-						<option value="{{ student.id }}">{{ student.name }} {{ student.surname }}</option>
-					{% endfor %}
-				</select>
-				<select class="form-select" name="name">
-					<option value="test">Test</option>
-					<option value="exam">Exam</option>
-				</select>
-				{{form.number(class="form-control", placeholder="Score")}}
-				{{form.submit(class="btn rounded btn-secondary")}}
-			</div>
-		</form>
-	
-		<table class="table table-hover table-bordered">
-			<thead>
-				<tr>
-					<th scope="col">Full Name</th>
-					<th scope="col">Test</th>
-					<th scope="col">Exam</th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for grade in grades %}
-				<tr>
-			 		<td>{{ grade.student.name }} {{ grade.student.other }} {{ grade.student.surname }}</td>
-					<td>{{ grade.test }}</td>
-					<td>{{ grade.exam }}</td>
-			 	</tr>
-		 	{% endfor %}
-		 	</tbody>
-		</table>
+  <p class="text-center f-5 fw-bold">{{ subject.title }}</p>
 
-		<div class="text-center">
-    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard"
-      >Return to dashboard</a
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Back</a>
+    <a
+      class="btn btn-secondary btn-sm mb-2"
+      data-bs-target="#setScores"
+      data-bs-toggle="modal"
+      >New</a
     >
   </div>
-	</div>
+
+  <div class="modal" id="setScores" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="POST">
+          <div class="modal-body">
+            {{ form.hidden_tag() }}
+            <select class="form-select mb-2" name="student">
+              <option>Student</option>
+              {% for student in students %}
+              <option value="{{ student.id }}">
+                {{ student.name }} {{ student.other }} {{ student.surname }}
+              </option>
+              {% endfor %}
+            </select>
+            <select class="form-select mb-2" name="name">
+              <option value="test">Test</option>
+              <option value="exam">Exam</option>
+            </select>
+            {{form.number(class="form-control", placeholder="Score")}}
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            {{ form.submit(class='btn btn-secondary') }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-hover table-bordered">
+    <thead>
+        <th scope="col">Full Name</th>
+        <th scope="col">Test</th>
+        <th scope="col">Exam</th>
+    </thead>
+    <tbody>
+      {% for grade in grades %}
+      <tr>
+        <td>
+          {{ grade.student.name }} {{ grade.student.other }} {{
+          grade.student.surname }}
+        </td>
+        <td>{{ grade.test }}</td>
+        <td>{{ grade.exam }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
 {% endblock %}

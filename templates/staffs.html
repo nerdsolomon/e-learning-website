@@ -1,109 +1,114 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="container">
-<br>
+  <br />
 
-{% for message in get_flashed_messages() %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-	{{ message }}
-	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
 
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Back</a>
+    <a
+      class="btn btn-secondary btn-sm mb-2"
+      data-bs-toggle="modal"
+      href="#addStaff"
+      >New</a
+    >
+  </div>
 
-
-<div class="modal" id="addStaff" tabindex="-1" aria-labelledby="addStaffLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addStaffLabel">Add Staff</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <form method = 'POST'>
-        	{{ form.hidden_tag() }}
-        	<input type="hidden" name="name" value="add">
-        	{{ form.string(placeholder="Full Name", class='form-control') }}
-        	<br>
-        	{{ form.email(placeholder="Email", class='form-control') }}
-        	<br>
-        	<select class="form-select" name="role">
-            	<option value=""selected>Role</option>
-            	<option value="Admin">Admin</option>
-            	<option value="Teacher">Teacher</option>
-        	</select><br>
-          {{ form.hidden }}
-      </div>
+  <div
+    class="modal"
+    id="addStaff"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="POST">
+          <div class="modal-body">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="name" value="add" />
+            {{ form.string(placeholder="Full Name", class='form-control mb-2')
+            }} {{ form.email(placeholder="Email", class='form-control mb-2') }}
+            <select class="form-select" name="role">
+              <option value="" selected>Role</option>
+              <option value="Admin">Admin</option>
+              <option value="Teacher">Teacher</option>
+            </select>
+            {{ form.hidden }}
+          </div>
           <div class="modal-footer">
-        	{{ form.submit(class='btn btn-secondary') }}
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+            {{ form.submit(class='btn btn-secondary') }}
           </div>
         </form>
+      </div>
     </div>
   </div>
-</div>
 
-
-<div class="table-responsive">
   <table class="table table-hover table-bordered">
-    <caption class="caption-top">
-      <a type="button" class="btn btn-secondary fw-bold btn-sm" data-bs-toggle="modal" href="#addStaff">Add Staff</a>
-    </caption>
-  <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Role</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for staff in staffs %}
-      <tr>
+    <thead>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
+    </thead>
+    <tbody>
+      {% for staff in staffs %}
+      <tr>
         <td>{{ staff.name }}</td>
         <td>{{ staff.email }}</td>
-        <td>{{ staff.role }}</td>
         <td>
-          <a class="btn btn-sm btn-secondary" href="#edit{{ staff.id }}" data-bs-toggle="modal">Edit</a>
-          <a class="btn btn-sm btn-danger" href="{{url_for('staff_delete', id=staff.id)}}">Delete</a>
+          {{ staff.role }}
+          <div class="dropdown float-end">
+            <b>⋮</b>
+            <div class="dropdown-items" style="right: 0">
+              <a href="#edit{{ staff.id }}" data-bs-toggle="modal">Edit</a>
+              <a href="{{url_for('staff_delete', id=staff.id)}}">Delete</a>
+            </div>
+          </div>
         </td>
-      </tr>
-      <div class="modal" id="edit{{ staff.id }}" tabindex="-1"aria-hidden="true">
+      </tr>
+
+      <div
+        class="modal"
+        id="edit{{ staff.id }}"
+        tabindex="-1"
+        aria-hidden="true"
+      >
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
-            <div class="modal-header">
-              <span class="fw-bold fs-5">Edit Staff</span>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form method = 'POST'>
-                  <input type="hidden" value="{{ staff.id }}" name="staff">
-                  <input type="hidden" value="edit" name="name">
-                  {{ form.hidden_tag() }}
-                  {{ form.string(value=staff.name, class="form-control") }}<br>
-                  {{ form.email(value=staff.email, class="form-control") }}<br>
-                  <select class="form-select" name="role">
-                      <option>{{ staff.role }}</option>
-                      <option value="Admin">Admin</option>
-                      <option value="Teacher">Teacher</option>
-                  </select>
-            </div>
-                <div class="modal-footer">
+            <form method="POST">
+              <div class="modal-body">
+                <input type="hidden" value="{{ staff.id }}" name="staff" />
+                <input type="hidden" value="edit" name="name" />
+                {{ form.hidden_tag() }} {{ form.string(value=staff.name,
+                class="form-control mb-2") }} {{ form.email(value=staff.email,
+                class="form-control mb-2") }}
+                <select class="form-select" name="role">
+                  <option>{{ staff.role }}</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Teacher">Teacher</option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
                 {{ form.submit(class='btn btn-secondary') }}
-                </div>
-              </form>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      {% endfor %}
+      {% endfor %}
     </tbody>
   </table>
-</div>
-
-<div class="text-center">
-	<a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Return to dashboard</a>
-</div>
-
-<br><br>
 </div>
 {% endblock %}

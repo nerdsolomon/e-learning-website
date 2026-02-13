@@ -1,109 +1,103 @@
-{% extends "base.html" %}
-{% block content %}
-
+{% extends "base.html" %} {% block content %}
 <div class="container">
+  <br />
 
-{% for message in get_flashed_messages() %}
-	<div class="alert alert-success alert-dismissible fade show" role="alert">
-		{{ message }}
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div>
-{% endfor %}
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
 
-<div class="table-responsive">
-<table class="table table-hover table-bordered">
-	<caption class="caption-top">
-		<button type="button" class="btn fw-bold btn-secondary" data-bs-toggle="modal" data-bs-target="#addStudent">Add New</button>
-	</caption>
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Other</th>
-      <th scope="col">Surname</th>
-	  <th scope="col">Sex</th>
-      <th scope="col">Email</th>
-	  <th scope="col">Remark</th>
-	  <th scope="col"></th>
-	  <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-	{% for student in students %}
-    <tr>
-   	<td>{{ student.name }}</td>
-   	<td>{{ student.other }}</td>
-   	<td>{{ student.surname }}</td>
-   	<td>{{ student.sex }}</td>
-   	<td>{{ student.email }}</td>
-	<td>{{ student.remark }}</td>
-	<td><a class='btn btn-secondary btn-sm' data-bs-toggle="modal" href="#editStudent">Edit</a></td>
-	<td><a class='btn btn-danger btn-sm' href="{{url_for('student_delete', id=student.id, active=active.session.id, num=current_user.room_id[0].id)}}">Delete</a></td>
-    </tr>
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Back</a>
+    <a class="btn btn-secondary btn-sm mb-2" data-bs-target="#addStudent" data-bs-toggle="modal">New</a>
+  </div>
+  <table class="table table-hover table-bordered">
+    <thead>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Remark</th>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr>
+        <td>{{ student.name }} {{ student.other }} {{ student.surname }}</td>
+        <td>{{ student.sex }}</td>
+        <td>{{ student.remark }}
+          <div class="dropdown float-end">
+            <b>⋮</b>
+            <div class="dropdown-items" style="right: 0">
+              <a href="#editStudent" data-bs-toggle="modal">Edit</a>
+              <a
+                href="{{url_for('student_delete', id=student.id, active=active.session.id, num=current_user.room_id[0].id)}}"
+                >Delete</a
+              >
+            </div>
+          </div>
+        </td>
+      </tr>
 
-<div class="modal" id="editStudent" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="fw-bold fs-6">Edit</span>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <form method = 'POST'>
-    		{{ form.hidden_tag() }}
-    		<input type="hidden" value="edit" name="named">
-    		<input type="hidden" value="{{ student.id }}" name="student">
-        	{{ form.name(value=student.name, class='form-control') }}<br/>
-        	{{ form.other(value=student.other, class='form-control') }}<br/>
-        	{{ form.surname(value=student.surname, class='form-control') }}<br/>
-        	<select class="form-select" name="sex">
-        	    <option >{{ student.sex }}</option>
-        	    <option value="Male">Male</option>
-	        	<option value="Female">Female</option>
-        	</select><br/>
-			{{ form.remark(value=student.remark, class='form-control', placeholder="Remark") }}<br/>
-        	{{ form.submit(class='btn btn-secondary') }}
+      <div class="modal" id="editStudent" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <form method="POST">
+              <div class="modal-body">
+                {{ form.hidden_tag() }}
+                <input type="hidden" value="edit" name="named" />
+                <input type="hidden" value="{{ student.id }}" name="student" />
+                {{ form.name(value=student.name, class='form-control mb-2') }}
+                {{ form.other(value=student.other, class='form-control mb-2') }}
+                {{ form.surname(value=student.surname, class='form-control mb-2') }}
+                <select class="form-select mb-2" name="sex">
+                  <option>{{ student.sex }}</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+                {{ form.remark(value=student.remark, class='form-control',
+                placeholder="Remark") }}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+                {{ form.submit(class='btn btn-secondary') }}
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="modal" id="addStudent" tabindex="-1" aria-labelledby="addStudentLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+            {{ form.hidden_tag() }}
+            <input type="hidden" value="add" name="named" />
+            {{ form.name(placeholder="First Name", class='form-control mb-2') }}
+            {{ form.other(placeholder="Other Name", class='form-control mb-2') }} 
+			{{ form.surname(placeholder="Surname", class='form-control mb-2') }}
+            <select class="form-select mb-2" name="sex">
+              <option>Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            {{ form.hidden }}
+			{{ form.file(class='form-control') }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+            {{ form.submit(class='btn btn-secondary') }}
+          </div>
         </form>
+      </div>
     </div>
   </div>
-</div>
-
-    {% endfor %}
-  </tbody>
-</table>
-</div>
-
-<div class="text-center">
-	<a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Return to dashboard</a>
-</div>
-
-<div class="modal" id="addStudent" tabindex="-1" aria-labelledby="addStudentLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h1 class="modal-title fs-6" id="addStudentLabel">Add New</h1>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-		   <form method = 'POST' enctype="multipart/form-data">
-			  {{ form.hidden_tag() }}
-			  <input type="hidden" value="add" name="named">
-			  {{ form.name(placeholder="First Name", class='form-control') }}<br/>
-			  {{ form.other(placeholder="Other Name", class='form-control') }}<br/>
-			  {{ form.surname(placeholder="Surname", class='form-control') }}<br/>
-			  <select class="form-select" name="sex">
-				  <option >Gender</option>
-				  <option value="Male">Male</option>
-				  <option value="Female">Female</option>
-			  </select><br/>
-			  {{ form.hidden }}
-			  {{ form.file(class='form-control') }}<br>
-			  {{ form.submit(class='btn btn-secondary') }}
-		  </div>
-		  </form>
-	  </div>
-	</div>
-  </div>
-  
 </div>
 {% endblock %}

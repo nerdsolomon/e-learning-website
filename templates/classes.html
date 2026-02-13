@@ -1,71 +1,95 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="container">
-<br>
+  <br />
 
-{% for message in get_flashed_messages() %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-	{{ message }}
-	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %}
 
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Back</a>
+    <a class="btn btn-secondary btn-sm mb-2" data-bs-target="#newClass" data-bs-toggle="modal">New</a>
+  </div>
 
-<table class="table table-hover table-bordered">
-	<caption class="caption-top">
-		<form method = 'POST'>
-			<div class="input-group gap-2" style="width:20rem;">
-				{{ form.hidden_tag() }}
-				<input type="hidden" value="class" name="name">	
-				{{ form.string(class="form-control rounded",placeholder="Class") }}
-				{{ form.submit(class='btn fw-bold rounded btn-secondary') }}
-			</div>
-		</form>
-	</caption>
-  <thead>
-    <tr>
-      <th scope="col">Class</th>
-      <th scope="col">Teacher</th>
-<th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-	{% for class in classes %}
-    <tr>
-      <td>
+  <div class="modal" id="newClass" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
         <form method="POST">
-           <input type="hidden" value="{{ class.id }}" name="room">
-       	<input type="hidden" value="edit" name="name">
-           {{ form.hidden_tag() }}
-       	   {{ form.string(value=class.title, style="border: 0; background-color: transparent; border-radius:0;", class="form-control") }}
+          <div class="modal-body">
+            {{ form.hidden_tag() }}
+            <input type="hidden" value="new" name="name" />
+            {{ form.string(class="form-control mb-2",placeholder="Class") }}
+			<select class="form-select" name="staff">
+				<option>Teacher</option>
+            	{% for staff in staffs %}
+                <option value="{{ staff.id }}">{{ staff.name }}</option>
+            	{% endfor %}
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            {{ form.submit(class='btn btn-secondary') }}
+          </div>
         </form>
-      </td>
-	 <td>
-<form method = 'POST'>
-	<div class="input-group">
-	{{ form.hidden_tag() }}
-	<input type="hidden" value="staff" name="name">
-	<input type="hidden" value="{{ class.id }}" name="room">	
-	<select class="form-select form-select-sm" name="staff" style="border: 0; background-color: transparent; border-radius:0;">
-		<option >{{ class.staff.name }}</option>
-		{% for staff in staffs %}
-		<option value="{{ staff.id }}">{{ staff.name }}</option>
-		{% endfor %}
-	</select>
-	<button class="btn btn-sm rounded btn-secondary" type="submit">Assign</button>
-	</div>
-</form>
-	 </td>
-	 <td><a class="btn btn-sm btn-danger" href="{{url_for('class_delete', id=class.id)}}">Delete</a></td>
-    </tr>
-	{% endfor %}
-  </tbody>
-</table>
+      </div>
+    </div>
+  </div>
 
-<div class="text-center">
-	<a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Return to dashboard</a>
-</div>
+  <table class="table table-hover table-bordered">
+    <thead>
+        <th scope="col">Class</th>
+        <th scope="col">Teacher</th>
+    </thead>
+    <tbody>
+      {% for class in classes %}
+      <tr>
+        <td>{{class.title}}</td>
+        <td>{{class.staff.name}}
+          <div class="dropdown float-end">
+            <b>⋮</b>
+            <div class="dropdown-items" style="right: 0">
+              <a href="#editClass" data-bs-toggle="modal">Edit</a>
+              <a href="{{url_for('class_delete', id=class.id)}}">Delete</a>
+            </div>
+          </div>
 
+          <div class="modal" id="editClass" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form method="POST">
+                  <div class="modal-body">
+                    {{ form.hidden_tag() }}
+                    <input type="hidden" value="edit" name="name" />
+                    <input type="hidden" value="{{ class.id }}" name="room" />
+                    {{ form.string(value=class.title, class="form-control mb-2") }}
+                    <select class="form-select" name="staff">
+                      <option>Teacher</option>
+                      {% for staff in staffs %}
+                      <option value="{{ staff.id }}">{{ staff.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {{ form.submit(class='btn btn-secondary') }}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

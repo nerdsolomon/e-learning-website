@@ -47,8 +47,6 @@
     </div>
   </div>
 
-  <hr class="mt-2" />
-
   {% if account == "Student" %}
 
   <div class="row g-2">
@@ -67,7 +65,7 @@
     {% endfor %}
   </div>
 
-  {% else %} {% if current_user.role == "Teacher" %}
+  {% else %} {% if current_user.role == "Teacher" and current_user.room_id %}
 
   <div class="row g-2">
     <div class="col-6">
@@ -118,7 +116,7 @@
     </div>
   </div>
 
-  {% else %}
+  {% elif current_user.role == "Admin" %}
 
   <div class="row g-2">
     <div class="col-6">

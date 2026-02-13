@@ -1,135 +1,176 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
-<div class="container-fluid">
-<br>
+<div class="container">
+  <br />
 
-{% for message in get_flashed_messages() %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-	{{ message }}
-	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
-
-<p class="fw-bold text-center">{{ subject.title }} QUESTIONS</p>
-
-<center>
-<button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addQues">Add Question</button>
-</center><br>
-
-<div class="modal" id="addQues" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Add Question</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method = 'POST'>
-        	{{ form.hidden_tag() }}
-        	<input type="hidden" value="setQ" name="name">
-        	{{ form.question(class='form-control', placeholder= "Question") }}
-        	<br/>
-            <select class="form-select" name='type'>
-            	<option value="Exam">Exam</option>
-            	<option value="Test">Test</option>
-            </select><br>
-            {{ form.answer(class='form-control', placeholder="Answer") }}<br>
-            {{ form.opt_one(class='form-control', placeholder="A.") }}<br>
-            {{ form.opt_two(class='form-control', placeholder="B.") }}<br>
-            {{ form.opt_three(class='form-control', placeholder="C.") }}
-      </div>
-          <div class="modal-footer">
-        	{{ form.submit(class='btn btn-secondary') }}
-          </div>
-        </form>
-    </div>
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
   </div>
-</div>
+  {% endfor %}
 
+  <p class="fw-bold text-center">{{ subject.title }}</p>
 
-<div class="row g-1">
-	{% for cbt in cbts.items %}
-    <div class="col-sm-4 mb-sm-0">
-	    <div class="card">
-		    <div class="card-body">
-          <div class="dropdown float-end">
-            <i>{{ cbt.type }}</i> <a class="dropdown-toggle"></a>
-            <div class="dropdown-items" style=" right: 0;">
-              <a href="#form{{ cbt.id }}" data-bs-toggle="modal">Edit</a>
-              <a href="{{url_for('question_delete', num=subject.id, id=cbt.id)}}">Delete</a>
-            </div>
-          </div>
-          <span style="white-space:pre-wrap !important;">{{ cbt.question }}</span>
-          <ol type="A">
-            <li>{{ cbt.opt_one }}</li> 
-            <li>{{ cbt.opt_two }}</li>
-            <li>{{ cbt.opt_three }}</li>
-          </ol>
-          <b>Answer : {{ cbt.answer }}</b>
-        </div>
-	    </div>
-    </div>
-    
- <div class="modal" id="form{{ cbt.id }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Edit Question</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-            <form method='POST'>
-                <input type="hidden" value="{{ cbt.id }}" name="qst">
-                <input type="hidden" value="edit" name="name">
-                <textarea class='form-control' placeholder="Question" name="question">{{ cbt.question }}</textarea><br>
-                <select class="form-select" name='type'>
-		            <option value="{{ cbt.type }}">{{ cbt.type  }}</option>
-		            <option value="Exam">Exam</option>
-	            	<option value="Test">Test</option>
-            	</select><br>
-	            {{ form.answer(class='form-control', value=cbt.answer) }}<br>
-	            {{ form.opt_one(class='form-control', value=cbt.opt_one) }}<br>
-	            {{ form.opt_two(class='form-control', value=cbt.opt_two) }}<br>
-            	{{ form.opt_three(class='form-control', value=cbt.opt_three) }}
-       </div>
-          <div class="modal-footer">
-        	{{ form.submit(class='btn btn-secondary') }}
-          </div>
-        </form>
-    </div>
-  </div>
-</div>  
-    
-	{% endfor %}
-</div>
-	
-<br><br>
-<div class="text-center">
-    <a href="{{ url_for('subject_questions', id=subject.id, page=cbts.prev_num) }}" class="btn btn-sm btn-outline-dark {% if cbts.page == 1 %}disabled{% endif %}">Back</a>
-    
-	{% for page_num in cbts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-	
-    	{% if page_num %}
-            {% if cbts.page == page_num %}
-     <a href="{{ url_for('subject_questions', id=subject.id,page=page_num) }}"class="btn btn-sm btn-dark">{{ page_num }}</a>
-            {% else %}
-    <a href="{{ url_for('subject_questions', id=subject.id,page=page_num) }}" class="btn btn-sm btn-outline-dark">{{ page_num }}</a>
-            {% endif %}
-        {% else %}
-        ...
-        {% endif %}
-    {% endfor %}
-    
-    <a href="{{ url_for('subject_questions',id=subject.id, page=cbts.next_num) }}" class="btn btn-sm btn-outline-dark {% if cbts.page == cbts.pages %}disabled{% endif %}">Next</a>
-</div>
-<br>
-<div class="text-center">
-    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard"
-      >Return to dashboard</a
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-secondary mb-2" href="/dashboard">Back</a>
+    <a
+      class="btn btn-secondary btn-sm mb-2"
+      data-bs-target="#addQues"
+      data-bs-toggle="modal"
+      >New</a
     >
   </div>
 
-<br>
+  <div class="modal" id="addQues" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">New Question</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form method="POST">
+          <div class="modal-body">
+            {{ form.hidden_tag() }}
+            <input type="hidden" value="setQ" name="name" />
+            {{ form.question(class='form-control mb-2', placeholder=
+            "Question")}}
+            <select class="form-select mb-2" name="type">
+              <option value="Exam">Exam</option>
+              <option value="Test">Test</option>
+            </select>
+            {{ form.answer(class='form-control mb-2', placeholder="Answer") }}
+            {{ form.opt_one(class='form-control mb-2', placeholder="A.") }} {{
+            form.opt_two(class='form-control mb-2', placeholder="B.") }} {{
+            form.opt_three(class='form-control mb-2', placeholder="C.") }}
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            {{ form.submit(class='btn btn-secondary') }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-1">
+    {% for cbt in cbts.items %}
+    <div class="col-sm-6 mb-sm-0">
+      <div class="card">
+        <div class="card-body">
+          <div class="dropdown float-end">
+            <b>⋮</b>
+            <div class="dropdown-items" style="right: 0">
+              <a href="#form{{ cbt.id }}" data-bs-toggle="modal">Edit</a>
+              <a
+                href="{{url_for('question_delete', num=subject.id, id=cbt.id)}}"
+                >Delete</a
+              >
+            </div>
+          </div>
+          <span style="white-space: pre-wrap !important"
+            >{{ cbt.question }}</span
+          >
+          <ol type="A">
+            <li>{{ cbt.opt_one }}</li>
+            <li>{{ cbt.opt_two }}</li>
+            <li>{{ cbt.opt_three }}</li>
+          </ol>
+          <div class="d-flex justify-content-between">
+            <small class="text-success fw-bold">Answer : {{ cbt.answer }}</small>
+            <span class="badge bg-secondary">{{ cbt.type }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="form{{ cbt.id }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form method="POST">
+            <div class="modal-body">
+              <input type="hidden" value="{{ cbt.id }}" name="qst" />
+              <input type="hidden" value="edit" name="name" />
+              <textarea
+                class="form-control mb-2"
+                placeholder="Question"
+                name="question"
+              >
+{{ cbt.question }}</textarea
+              >
+              <select class="form-select mb-2" name="type">
+                <option value="{{ cbt.type }}">{{ cbt.type }}</option>
+                <option value="Exam">Exam</option>
+                <option value="Test">Test</option>
+              </select>
+              {{ form.answer(class='form-control mb-2', value=cbt.answer) }} {{
+              form.opt_one(class='form-control mb-2', value=cbt.opt_one) }} {{
+              form.opt_two(class='form-control mb-2', value=cbt.opt_two) }} {{
+              form.opt_three(class='form-control mb-2', value=cbt.opt_three) }}
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              {{ form.submit(class='btn btn-secondary') }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+
+  <br /><br />
+  <div class="text-center">
+    <a
+      href="{{ url_for('subject_questions', id=subject.id, page=cbts.prev_num) }}"
+      class="btn btn-sm btn-outline-dark {% if cbts.page == 1 %}disabled{% endif %}"
+      >Back</a
+    >
+
+    {% for page_num in cbts.iter_pages(left_edge=1, right_edge=1,
+    left_current=1, right_current=2) %} {% if page_num %} {% if cbts.page ==
+    page_num %}
+    <a
+      href="{{ url_for('subject_questions', id=subject.id,page=page_num) }}"
+      class="btn btn-sm btn-dark"
+      >{{ page_num }}</a
+    >
+    {% else %}
+    <a
+      href="{{ url_for('subject_questions', id=subject.id,page=page_num) }}"
+      class="btn btn-sm btn-outline-dark"
+      >{{ page_num }}</a
+    >
+    {% endif %} {% else %} ... {% endif %} {% endfor %}
+
+    <a
+      href="{{ url_for('subject_questions',id=subject.id, page=cbts.next_num) }}"
+      class="btn btn-sm btn-outline-dark {% if cbts.page == cbts.pages %}disabled{% endif %}"
+      >Next</a
+    >
+  </div>
 </div>
 {% endblock %}
